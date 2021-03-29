@@ -1,0 +1,7 @@
+.hero {
+    background-image: url('../../images/pawel-czerwinski-PtHP1wFSSYI-unsplash.jpg');
+    background-position: bottom;
+    background-repeat: no-repeat;
+    background-size: cover;
+    min-height: 300px;
+}

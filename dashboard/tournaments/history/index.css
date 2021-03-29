@@ -1,0 +1,7 @@
+.hero {
+    background-image: url('../../../images/avi-waxman-xlO5WWQDcQQ-unsplash.jpg');
+    background-position: bottom;
+    background-repeat: no-repeat;
+    background-size: cover;
+    min-height: 275px;
+}

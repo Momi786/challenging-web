@@ -1,0 +1,7 @@
+.hero {
+    background-image: url('https://cdn2.unrealengine.com/Fortnite%2Fblog%2Fshow-off-your-style-banners%2F09BR_Social_BannerBrigadeSet_1920x1080_1-1920x1080-7a16334eb3f3d5c6dfbeb4c31d81c7fbda681452.jpg');
+    background-position: top;
+    background-repeat: no-repeat;
+    background-size: cover;
+    min-height: 300px;
+}
