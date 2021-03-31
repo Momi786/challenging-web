@@ -23,7 +23,7 @@ challengeResultButtons.forEach((challengeResultButton) => {
             });
 
             // Set up our request
-            XHR.open('POST', '../../../php-apis/claim-challenge-result.php');
+            XHR.open('POST', '../../../php-apis/claim-tournament-result.php');
 
             // Send our FormData object; HTTP headers are set automatically
             XHR.send(FD);

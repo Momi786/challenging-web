@@ -700,17 +700,24 @@
             </h2>
 
             <?php
-                $sql6 = "SELECT * FROM tournaments_log WHERE tournament_by = $user_id AND status = 'confirmed'";
+                $sql6 = "SELECT * FROM tourney_players WHERE player_id = $user_id";
                 $result6 = mysqli_query($conn, $sql6);
-
-                if (mysqli_num_rows($result6) > 0) {
-                        while ($row5 = mysqli_fetch_assoc($result6)) {
+                $countResult =  mysqli_num_rows($result6);
+                if ($countResult > 0) {
+                        for ($i=0; $i < $countResult; $i++) { 
+                            $row6 = mysqli_fetch_assoc($result6);
+                            $tournamentId = $row6['tourney_id'];
+                            $sql7 = "SELECT * FROM tournaments_log WHERE tournament_id  = $tournamentId AND status='confirmed'";
+                            $result7 = mysqli_query($conn, $sql7);
+                            $countResult7 =  mysqli_num_rows($result7);
+                            $row5 = mysqli_fetch_assoc($result7);
+                            if($countResult7 > 0){
 
                         ?>
 
                             <div class="card my-3">
                                 <div class="card-header">
-                                    Challenge # <?php echo $row5['tournament_id']; ?>
+                                    Tournament # <?php echo $row5['tournament_id']; ?>
                                 </div>
                                 <div class="card-body">
                                     <h5 class="card-title">
@@ -725,11 +732,11 @@
 
                                                     $tournament_by = $row5['tournament_by'];
 
-                                                    $sql6 = "SELECT * FROM users WHERE id = $tournament_by";
-                                                    $result6 = mysqli_query($conn, $sql6);
+                                                    $sql7 = "SELECT * FROM users WHERE id = $tournament_by";
+                                                    $result7 = mysqli_query($conn, $sql7);
 
-                                                    if (mysqli_num_rows($result6) > 0) {
-                                                        while ($row6 = mysqli_fetch_assoc($result6)) {
+                                                    if (mysqli_num_rows($result7) > 0) {
+                                                        while ($row6 = mysqli_fetch_assoc($result7)) {
                                                             echo $row6['username'];
                                                         }
                                                     } else {
@@ -803,6 +810,7 @@
 
                         <?php
 
+                        }
                         }
                     } else {
                         echo "<h2 class='text-center my-3'>No Confirmed Challenges!</h2>";
