@@ -191,15 +191,18 @@ unset($_COOKIE['matchData1']);
                                         <?php } else { ?>
 
                                             <?php
-
+                                                
+                                                $sql55 = "SELECT * FROM tourney_players WHERE tourney_id = $tournament_id AND player_id=$logged_in_player_id";
+                                                $result155 = mysqli_query($conn, $sql55);
+                                                $row155 = mysqli_fetch_assoc($result155);
                                             if ($logged_in_player_id === $challenge_by) {
-                                                if ((empty($row['challenge_by_claimed_result']) || is_null($row['challenge_by_claimed_result'])) && (empty($row['challenge_by_claim_timestamp']) || is_null($row['challenge_by_claim_timestamp']))) {
+                                                if ((empty($row155['result']) || is_null($row155['result'])) && (empty($row155['claim_timestamp']) || is_null($row155['claim_timestamp']))) {
                                                     $result_claimed = false;
                                                 } else {
                                                     $result_claimed = true;
                                                 }
                                             } else {
-                                                if ((empty($row['accepted_by_claimed_result']) || is_null($row['accepted_by_claimed_result'])) && (empty($row['accepted_by_claim_timestamp']) || is_null($row['accepted_by_claim_timestamp']))) {
+                                                if ((empty($row155['result']) || is_null($row155['result'])) && (empty($row155['claim_timestamp']) || is_null($row155['claim_timestamp']))) {
                                                     $result_claimed = false;
                                                 } else {
                                                     $result_claimed = true;
@@ -208,23 +211,59 @@ unset($_COOKIE['matchData1']);
 
                                             ?>
 
-                                            <?php if ($result_claimed) { ?>
+                                            <?php if ($result_claimed) { 
+                                                    if ($row155['serial_number'] %2==0) {
+                                                        $side = "even";
+                                                        $play_id= $row155['serial_number'] -1;
+                                                    }else{
+                                                        $side = "odd"; 
+                                                        $play_id= $row155['serial_number'] +1;
+                                                    }
+                                                    $sql56 = "SELECT * FROM tourney_players WHERE tourney_id = $tournament_id AND serial_number=$play_id";
+                                                    $result156 = mysqli_query($conn, $sql56);
+                                                    $row156 = mysqli_fetch_assoc($result156);
+                                                ?>
+                                                
 
                                                 <tr>
                                                     <td class="text-center fs-1 fw-bold" colspan="3">Claimed Results</td>
                                                 </tr>
                                                 <tr class="text-start">
-                                                    <td>
-                                                        <span class="text-uppercase fw-bold text-start"><?php echo $row['challenge_by_claimed_result']; ?></span>
-                                                        <br />
-                                                        <?php echo $row['challenge_by_claim_timestamp']; ?>
-                                                    </td>
-                                                    <td></td>
-                                                    <td class="text-end">
-                                                        <span class="text-uppercase fw-bold text-end"><?php echo $row['accepted_by_claimed_result']; ?></span>
-                                                        <br />
-                                                        <?php echo $row['accepted_by_claim_timestamp']; ?>
-                                                    </td>
+                                                    <?php if($side == "odd"){ ?>
+                                                        <td>
+                                                            <span class="text-uppercase fw-bold text-start"><?php echo $row155['result']; ?></span>
+                                                            <br />
+                                                            <?php echo $row155['claim_timestamp']; ?>
+                                                        </td>
+                                                        <td>
+                                                            <?php if($row155['result'] == "disputed"){ ?>
+                                                                <input type="hidden" id="is_active_group_chat_window" value="no" />
+                                                                <button type="button" name="group_chat" challengeId="<?= $_GET['tournament-id'] ?>" id="group_chat" class="btn btn-warning btn-xs">Group Chat</button>
+                                                            <?php } ?>
+                                                        </td>
+                                                        <td class="text-end">
+                                                            <span class="text-uppercase fw-bold text-end"><?php echo $row156['result']; ?></span>
+                                                            <br />
+                                                            <?php echo $row156['claim_timestamp']; ?>
+                                                        </td>
+                                                    <?php } else{ ?>
+                                                        <td>
+                                                            <span class="text-uppercase fw-bold text-start"><?php echo $row156['result']; ?></span>
+                                                            <br />
+                                                            <?php echo $row156['claim_timestamp']; ?>
+                                                        </td>
+                                                        <td>
+                                                            <?php if($row155['result'] == "disputed"){ ?>
+                                                                <input type="hidden" id="is_active_group_chat_window" value="no" />
+                                                                <button type="button" name="group_chat" challengeId="<?= $_GET['tournament-id'] ?>" id="group_chat" class="btn btn-warning btn-xs">Group Chat</button>
+                                                            <?php } ?>
+                                                        </td>
+                                                        <td class="text-end">
+                                                            <span class="text-uppercase fw-bold text-end"><?php echo $row155['result']; ?></span>
+                                                            <br />
+                                                            <?php echo $row155['claim_timestamp']; ?>
+                                                        </td>
+                                                    <?php } ?>
                                                 </tr>
 
                                                 <tr>
@@ -264,16 +303,16 @@ unset($_COOKIE['matchData1']);
                                                         ?>
 
                                                         <tr>
-                                                            <td class="text-center text-success fs-2 fw-bold" colspan="3">The Tournament Is Won By <?php echo $won_by_username; ?></td>
+                                                            <td class="text-center text-success fs-2 fw-bold" colspan="3">The match Is Won By <?php echo $won_by_username; ?></td>
                                                         </tr>
 
                                                     <?php } elseif ($row['status'] === 'tie') { ?>
                                                         <tr>
-                                                            <td class="text-center text-secondary fs-2 fw-bold" colspan="3">The Tournament Has Ended With A Tie</td>
+                                                            <td class="text-center text-secondary fs-2 fw-bold" colspan="3">The match Has Ended With A Tie</td>
                                                         </tr>
                                                     <?php } else { ?>
                                                         <tr>
-                                                            <td class="text-center text-danger fs-2 fw-bold" colspan="3">The Tournament Has Ended With A Dispute</td>
+                                                            <td class="text-center text-danger fs-2 fw-bold" colspan="3">The match Has Ended With A Dispute</td>
                                                             
                                                         </tr>
                                                         <tr>
@@ -322,7 +361,7 @@ unset($_COOKIE['matchData1']);
 
                         <?php } else { ?>
 
-                            <h1 class="text-center">Tournament # <?php echo $row['challenge_id']; ?> Not In Confirmed State</h1>
+                            <h1 class="text-center">Tournament # <?php echo $row['tournament_id']; ?> Not In Confirmed State</h1>
                             <p class="text-center">
                                 <a href="../" class="btn btn-primary">Go Back To Tournament...</a>
                             </p>

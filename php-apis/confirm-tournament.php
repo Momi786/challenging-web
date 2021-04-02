@@ -82,7 +82,6 @@ if (empty($_SESSION['id']) || is_null($_SESSION['id'])) {
                                 $response_msg['status'] = 'error';
                                 $response_msg['description'] .= 'Error: Tournament Reset! You will have to Re-Open this Tournament.';
 
-
                                     $notif_msg = 'Tournament # ' . $row['tournament_id'] . ' has been Exired because no one start the tournament.';
 
                                     $query1 = "SELECT * from tourney_players where tourney_id='$tourneyId'";

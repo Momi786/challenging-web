@@ -393,12 +393,19 @@
 
                 <?php
 
-                $sql2 = "SELECT COUNT(*) AS entered_count FROM tournaments_log INNER JOIN tourney_players ON tournaments_log.tournament_id = tourney_players.tourney_id WHERE (tourney_players.player_id = $user_id AND tournaments_log.tournament_by <> $user_id AND tournaments_log.status <> 'ready')";
+                $sql2 = "SELECT * FROM tournaments_log INNER JOIN tourney_players ON tournaments_log.tournament_id = tourney_players.tourney_id WHERE (tourney_players.player_id = $user_id  AND tournaments_log.status <> 'ready') ORDER BY tourney_players.enter_timestamp DESC";
                 $result2 = mysqli_query($conn, $sql2);
-
-                if (mysqli_num_rows($result2) > 0) {
+                $countRoews = mysqli_num_rows($result2);
+                if ( $countRoews > 0) {
+                    $sql13 = "SELECT * FROM tournaments_log INNER JOIN tourney_players ON tournaments_log.tournament_id = tourney_players.tourney_id WHERE (tourney_players.player_id = $user_id AND  tournaments_log.status <> 'ready') ORDER BY tourney_players.enter_timestamp DESC";
+                    $result13 = mysqli_query($conn, $sql13);
+                    $row13 = mysqli_fetch_assoc($result13);
                     while ($row2 = mysqli_fetch_assoc($result2)) {
-                        echo $row2['entered_count'];
+                        if($row13['status'] == "ready"){
+                            echo $countRoews;
+                        }else{
+                            echo '0';
+                        }
                     }
                 } else {
                     echo '0';
@@ -430,7 +437,7 @@
                     } else {
                         $tournament_by_username = 'Error: User Not Found';
                     }
-
+                    if($row5['status'] == "ready"){
             ?>
 
                     <div class="card mb-3">
@@ -443,7 +450,6 @@
                                     <span>
                                         <?php echo (($row5['game'] === 'fifa_21') ? (strtoupper(str_replace("_", " ", $row5['game']))) : (ucwords(str_replace("_", " ", $row5['game'])))) . ' - ' . (($row5['console'] === 'ps4' || $row5['console'] === 'pc') ? (strtoupper($row5['console'])) : (ucwords($row5['console']))); ?>
                                     </span>
-                                    <!-- Button trigger modal -->
                                     <button type="button" class="btn btn-dark ms-auto" data-bs-toggle="modal" data-bs-target="#tourney-players-modal" data-bs-tourneyId="<?php echo $row5['tournament_id']; ?>">
                                         Players
                                     </button>
@@ -513,7 +519,14 @@
                         </div>
                     </div>
 
-                <?php } ?>
+                <?php 
+                        }else { ?>
+
+                            <h3 class="text-center text-danger">No Entered Tournaments</h3>
+            
+                        <?php } 
+                    } 
+                ?>
 
             <?php } else { ?>
 

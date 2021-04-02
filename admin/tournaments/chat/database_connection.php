@@ -36,16 +36,9 @@ function fetch_user_chat_history($from_user_id, $to_user_id, $connect)
 	{
 		$user_name = '';
 		if ($row["admin_id"] == null) {
-			if($row["from_user_id"] == $from_user_id)
-			{
-				$user_name = '<b class="text-success">You</b>';
-			}
-			else
-			{
-				$user_name = '<b class="text-danger">'.get_user_name($row['from_user_id'], $connect).'</b>';
-			}
+			$user_name = '<b class="text-danger">'.get_user_name($row['from_user_id'], $connect).'</b>';
 		}else{
-			$user_name = '<b class="text-primary">Admin</b>';
+			$user_name = '<b class="text-primary">You</b>';
 		}
 		$output .= '
 		<li style="border-bottom:1px dotted #ccc">
@@ -142,18 +135,10 @@ function fetch_group_chat_history($connect,$challenge_id)
 	{
 		$user_name = '';
 		if ($row["admin_id"] == null) {
-			if($row["from_user_id"] == $_SESSION["id"])
-			{
-				$user_name = '<b class="text-success">You</b>';
-			}
-			else
-			{
-				$user_name = '<b class="text-danger">'.get_user_name($row['from_user_id'], $connect).'</b>';
-			}
+			$user_name = '<b class="text-danger">'.get_user_name($row['from_user_id'], $connect).'</b>';
 		}else{
-			$user_name = '<b class="text-primary">Admin</b>';
+			$user_name = '<b class="text-primary">You</b>';
 		}
-
 		$output .= '
 
 		<li style="border-bottom:1px dotted #ccc">

@@ -2,8 +2,7 @@
 
 //insert_chat.php
 
-include("../../../../php-apis/db-config.php");
-
+include('database_connection.php');
 session_start();
 
 $data = array(
@@ -19,11 +18,11 @@ INSERT INTO chat_message
 VALUES (:to_user_id, :from_user_id, :chat_message, :status)
 ";
 
-$statement = $conn->prepare($query);
+$statement = $connect->prepare($query);
 
 if($statement->execute($data))
 {
-	echo fetch_user_chat_history($_SESSION['user_id'], $_POST['to_user_id'], $conn);
+	echo fetch_user_chat_history($_SESSION['user_id'], $_POST['to_user_id'], $connect);
 }
 
 ?>

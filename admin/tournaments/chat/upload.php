@@ -14,7 +14,7 @@ if(!empty($_FILES))
 			$target_path = 'upload/' . $_FILES['uploadFile']['name'];
 			if(move_uploaded_file($_source_path, $target_path))
 			{
-				echo '<p><img src="'.$target_path.'" class="img-thumbnail" width="200" height="160" /></p><br />';
+				echo '<p><img src="chat/'.$target_path.'" class="img-thumbnail" width="200" height="160" /></p><br />';
 			}
 			//echo $ext;
 		}

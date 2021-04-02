@@ -1,8 +1,7 @@
 <?php
 
 //update_is_type_status.php
-
-include("../../../../php-apis/db-config.php");
+include('database_connection.php');
 
 session_start();
 
@@ -12,7 +11,7 @@ SET is_type = '".$_POST["is_type"]."'
 WHERE login_details_id = '".$_SESSION["login_details_id"]."'
 ";
 
-$statement = $conn->prepare($query);
+$statement = $connect->prepare($query);
 
 $statement->execute();
 

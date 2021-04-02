@@ -2,7 +2,7 @@
 
 //update_last_activity.php
 
-include("../../../../php-apis/db-config.php");
+include('database_connection.php');
 session_start();
 
 $query = "
@@ -11,7 +11,7 @@ SET last_activity = now()
 WHERE login_details_id = '".$_SESSION["login_details_id"]."'
 ";
 
-$statement = $conn->prepare($query);
+$statement = $connect->prepare($query);
 
 $statement->execute();
 

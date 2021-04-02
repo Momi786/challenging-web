@@ -54,11 +54,11 @@
                                     <form action="" method="post">
                                         <div class="form-group">
                                             <label class="mb-1 text-white"><strong>Username</strong></label>
-                                            <input type="text" name="username" class="form-control" placeholder="Username">
+                                            <input type="text" name="username" value="admin" class="form-control" placeholder="Username">
                                         </div>
                                         <div class="form-group">
                                             <label class="mb-1 text-white"><strong>Password</strong></label>
-                                            <input type="password" name="password" class="form-control" placeholder="Password">
+                                            <input type="password" name="password" value="abc123" class="form-control" placeholder="Password">
                                         </div>
                                         <div class="text-center">
                                             <button type="submit" class="btn bg-white text-primary btn-block">Sign Me In</button>
