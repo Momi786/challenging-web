@@ -1,5 +1,8 @@
 <?php
 include '../header.php';
+$sql = "SELECT  * FROM users ORDER BY `skill_points` DESC limit 10";
+$result = mysqli_query($conn, $sql);
+$i=0;
 ?>
 
 <div class="container my-5">
@@ -13,15 +16,27 @@ include '../header.php';
 
     <div class="row">
         <div class="col-6 mx-auto">
-            <table class="table table-sm">
-                <thead class="text-center">
+            <table class="table table-sm text-center">
+                <thead>
                     <tr>
                         <th scope="col">Position</th>
                         <th scope="col">User</th>
                         <th scope="col">Score</th>
                     </tr>
                 </thead>
-                <tbody></tbody>
+                <tbody>
+                    <?php 
+                        while($row = mysqli_fetch_assoc($result)) {
+                            $i++;
+                            ?>
+                            <tr>
+                                <td><?= $i ?></td>
+                                <td><?= $row['username']?></td>
+                                <td><?= $row['skill_points'] ?></td>
+                            </tr>
+                        <?php }  ?>
+
+                </tbody>
             </table>
         </div>
     </div>
