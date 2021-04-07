@@ -399,11 +399,13 @@
 
             <?php
 
-            $sql5 = "SELECT * FROM challenges_log WHERE (challenge_by = $user_id OR accepted_by = $user_id) AND status = 'confirmed' ORDER BY confirmed_timestamp DESC";
+            $sql5 = "SELECT * FROM challenges_log WHERE challenge_by = $user_id AND status = 'confirmed' ORDER BY confirmed_timestamp DESC";
             $result5 = mysqli_query($conn, $sql5);
 
             if (mysqli_num_rows($result5) > 0) {
-                while ($row5 = mysqli_fetch_assoc($result5)) {
+                $count4 = mysqli_num_rows($result5);
+                for ($i=0; $i < $count4 ; $i++) { 
+                 ($row5 = mysqli_fetch_assoc($result5)) 
 
             ?>
 

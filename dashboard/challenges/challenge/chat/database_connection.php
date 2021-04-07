@@ -1,7 +1,7 @@
 <?php
-$connect = new PDO("mysql:host=localhost;dbname=codeditors_challenge_site;charset=utf8mb4", "root", "");
+$conn = new PDO("mysql:host=localhost;dbname=codeditors_challenge_site;charset=utf8mb4", "root", "");
 date_default_timezone_set('Asia/Kolkata');
-function fetch_user_last_activity($user_id, $connect)
+function fetch_user_last_activity($user_id, $conn)
 {
 	$query = "
 	SELECT * FROM login_details 
@@ -9,7 +9,7 @@ function fetch_user_last_activity($user_id, $connect)
 	ORDER BY last_activity DESC 
 	LIMIT 1
 	";
-	$statement = $connect->prepare($query);
+	$statement = $conn->prepare($query);
 	$statement->execute();
 	$result = $statement->fetchAll();
 	foreach($result as $row)
@@ -18,7 +18,7 @@ function fetch_user_last_activity($user_id, $connect)
 	}
 }
 
-function fetch_user_chat_history($from_user_id, $to_user_id, $connect)
+function fetch_user_chat_history($from_user_id, $to_user_id, $conn)
 {
 	$query = "
 	SELECT * FROM chat_message 
@@ -28,20 +28,24 @@ function fetch_user_chat_history($from_user_id, $to_user_id, $connect)
 	AND to_user_id = '".$from_user_id."') 
 	ORDER BY timestamp DESC
 	";
-	$statement = $connect->prepare($query);
+	$statement = $conn->prepare($query);
 	$statement->execute();
 	$result = $statement->fetchAll();
 	$output = '<ul class="list-unstyled">';
 	foreach($result as $row)
 	{
 		$user_name = '';
-		if($row["from_user_id"] == $from_user_id)
-		{
-			$user_name = '<b class="text-success">You</b>';
-		}
-		else
-		{
-			$user_name = '<b class="text-danger">'.get_user_name($row['from_user_id'], $connect).'</b>';
+		if ($row["admin_id"] == null) {
+			if($row["from_user_id"] == $from_user_id)
+			{
+				$user_name = '<b class="text-success">You</b>';
+			}
+			else
+			{
+				$user_name = '<b class="text-danger">'.get_user_name($row['from_user_id'], $conn).'</b>';
+			}
+		}else{
+			$user_name = '<b class="text-primary">Admin</b>';
 		}
 		$output .= '
 		<li style="border-bottom:1px dotted #ccc">
@@ -61,15 +65,15 @@ function fetch_user_chat_history($from_user_id, $to_user_id, $connect)
 	AND to_user_id = '".$from_user_id."' 
 	AND status = '1'
 	";
-	$statement = $connect->prepare($query);
+	$statement = $conn->prepare($query);
 	$statement->execute();
 	return $output;
 }
 
-function get_user_name($user_id, $connect)
+function get_user_name($user_id, $conn)
 {
-	$query = "SELECT username FROM login WHERE user_id = '$user_id'";
-	$statement = $connect->prepare($query);
+	$query = "SELECT username FROM users WHERE id = '$user_id'";
+	$statement = $conn->prepare($query);
 	$statement->execute();
 	$result = $statement->fetchAll();
 	foreach($result as $row)
@@ -78,7 +82,7 @@ function get_user_name($user_id, $connect)
 	}
 }
 
-function count_unseen_message($from_user_id, $to_user_id, $connect)
+function count_unseen_message($from_user_id, $to_user_id, $conn)
 {
 	$query = "
 	SELECT * FROM chat_message 
@@ -86,7 +90,7 @@ function count_unseen_message($from_user_id, $to_user_id, $connect)
 	AND to_user_id = '$to_user_id' 
 	AND status = '1'
 	";
-	$statement = $connect->prepare($query);
+	$statement = $conn->prepare($query);
 	$statement->execute();
 	$count = $statement->rowCount();
 	$output = '';
@@ -97,7 +101,7 @@ function count_unseen_message($from_user_id, $to_user_id, $connect)
 	return $output;
 }
 
-function fetch_is_type_status($user_id, $connect)
+function fetch_is_type_status($user_id, $conn)
 {
 	$query = "
 	SELECT is_type FROM login_details 
@@ -105,7 +109,7 @@ function fetch_is_type_status($user_id, $connect)
 	ORDER BY last_activity DESC 
 	LIMIT 1
 	";	
-	$statement = $connect->prepare($query);
+	$statement = $conn->prepare($query);
 	$statement->execute();
 	$result = $statement->fetchAll();
 	$output = '';
@@ -119,15 +123,15 @@ function fetch_is_type_status($user_id, $connect)
 	return $output;
 }
 
-function fetch_group_chat_history($connect)
+function fetch_group_chat_history($conn,$challenge_id)
 {
 	$query = "
 	SELECT * FROM chat_message 
-	WHERE to_user_id = '0'  
+	WHERE challenge_id = '$challenge_id'  
 	ORDER BY timestamp DESC
 	";
 
-	$statement = $connect->prepare($query);
+	$statement = $conn->prepare($query);
 
 	$statement->execute();
 
@@ -137,13 +141,17 @@ function fetch_group_chat_history($connect)
 	foreach($result as $row)
 	{
 		$user_name = '';
-		if($row["from_user_id"] == $_SESSION["user_id"])
-		{
-			$user_name = '<b class="text-success">You</b>';
-		}
-		else
-		{
-			$user_name = '<b class="text-danger">'.get_user_name($row['from_user_id'], $connect).'</b>';
+		if ($row["admin_id"] == null) {
+			if($row["from_user_id"] == $_SESSION["id"])
+			{
+				$user_name = '<b class="text-success">You</b>';
+			}
+			else
+			{
+				$user_name = '<b class="text-danger">'.get_user_name($row['from_user_id'], $conn).'</b>';
+			}
+		}else{
+			$user_name = '<b class="text-primary">Admin</b>';
 		}
 
 		$output .= '
